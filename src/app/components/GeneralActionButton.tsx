@@ -12,7 +12,8 @@ const GeneralActionButton = ({ buttonData }: Props) => {
     <button
       type={type}
       onClick={action}
-      className={`rounded-lg shadow-lg ${padding} ${colorButton} font-medium ${size} text-white font-principal`}
+      className={`h-max rounded-lg shadow-lg ${padding} ${colorButton} font-medium ${size} text-white
+      font-principal`}
     >
       {text}
     </button>

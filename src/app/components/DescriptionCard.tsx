@@ -7,7 +7,9 @@ interface Props {
 
 const DescriptionCard = ({ descriptionText }: Props) => {
   return (
-    <p className="w-[700px] text-base font-light m-2 ">{descriptionText}</p>
+    <p className="w-[700px] max-h-[100px] overflow-y-auto text-base font-extralight m-2 font-principal">
+      {descriptionText}
+    </p>
   );
 };
 

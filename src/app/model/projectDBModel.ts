@@ -3,6 +3,6 @@ export interface ProjectDB{
   title: string,
   description: string,
   requirements: string,
-  duration: number,
+  duration: Date,
   linkedin_creator: string
 }
