@@ -9,7 +9,9 @@ import { ProjectDB } from "@/app/model/projectDBModel";
 import { SkillProject } from "@/app/model/skillProjectModel";
 import { DB_INSTANCE } from "@/app/services/dbInstance";
 import useAxios from "axios-hooks";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "@/app/services/apiInstance";
+import { getAuthToken } from "@/app/services/authService";
 
 const NewProjects = () => {
   // const [{ data, loading, error }] = useAxios(`${DB_INSTANCE}/api/v1/projects`);
