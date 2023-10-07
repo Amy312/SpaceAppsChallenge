@@ -14,12 +14,18 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        'principal': ["'M PLUS 2'","sans-serif"]
+        'principal': ['"M PLUS 2"',"sans-serif"]
       },
       colors: {
         'principal-blue':'#47576E',
         'active-principal-blue':'#50617A',
         'hover-principal-blue':'#7994BA',
+        'button-green': '#5E8268',
+        'hover-button-green': '#95CFA5',
+        'active-button-green': '#678F72',
+        'button-red': '#AF4545',
+        'hover-button-red': '#95CFA5',
+        'active-button-red': '#678F72',
       }
     }
   },

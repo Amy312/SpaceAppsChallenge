@@ -1,23 +1,48 @@
 "use client";
-import React from "react";
+import Card from "@/app/components/Card";
+import ProjectCardFooter from "@/app/components/ProjectCardFooter";
+import SkillsList from "@/app/components/SkillsList";
+import { NEW_PROJECTS_BUTTON_STYLE } from "@/app/data/projectsButtonData";
+import { ProjectDB } from "@/app/model/projectDBModel";
+import { DB_INSTANCE } from "@/app/services/dbInstance";
+import useAxios from "axios-hooks";
+import React, { useEffect } from "react";
 
 const NewProjects = () => {
+  const [{ data, loading, error }] = useAxios(`${DB_INSTANCE}/api/v1/projects`);
+
+  const getProjectsDataDB = async () => {
+    console.log("GETTING DATA");
+    const projectList: ProjectDB[] = await data;
+    console.log("DATA GOTTEN");
+    console.log(projectList);
+  };
+
+  useEffect(() => {
+    getProjectsDataDB();
+  }, []);
+
+  if (loading) {
+    return <p>loading</p>;
+  }
+  if (error) {
+    return <p>error</p>;
+  }
+
   return (
-    <div className="w-32">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-      reiciendis provident cumque expedita aliquid accusantium numquam
-      perspiciatis, magnam id delectus impedit ut unde repudiandae illo sunt ad
-      molestias ipsam doloribus? Lorem ipsum, dolor sit amet consectetur
-      adipisicing elit. Eos atque, necessitatibus minima est incidunt totam
-      corporis at error ea voluptatibus. Dolorem blanditiis nemo corrupti
-      impedit alias illum laudantium nihil aspernatur. Lorem ipsum dolor sit
-      amet consectetur, adipisicing elit. Voluptatibus, temporibus modi aut
-      pariatur reiciendis sit expedita deleniti deserunt iusto! Id tenetur ipsum
-      exercitationem saepe molestias maxime ex. Sunt, aut distinctio? Lorem
-      ipsum dolor sit amet consectetur adipisicing elit. Alias soluta quia
-      distinctio ipsum harum. Nam cumque consequatur corrupti, ea quas adipisci
-      ipsum eligendi iusto, reprehenderit quaerat, itaque sequi nihil aut!
-    </div>
+    <section className="w-full h-full flex justify-center">
+      <Card
+        titleText={"Title of a Project that a random published"}
+        descriptionText={
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam praesentium eligendi tenetur quidem nobis reprehenderit culpa repellendus eaque architecto, saepe eius iste explicabo. Aliquam fugiat, neque minima magni repellendus harum!"
+        }
+      >
+        <>
+          <SkillsList listSkills={[]} />
+          <ProjectCardFooter buttonData={NEW_PROJECTS_BUTTON_STYLE} />
+        </>
+      </Card>
+    </section>
   );
 };
 
