@@ -14,7 +14,7 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        'principal': ["'M PLUS 2'","sans-serif"]
+        'principal': ['"M PLUS 2"',"sans-serif"]
       },
       colors: {
         'principal-blue':'#47576E',
