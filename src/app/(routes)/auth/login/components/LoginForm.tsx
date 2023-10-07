@@ -1,9 +1,11 @@
-import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import useAxios from "axios-hooks";
+import { setAuthToken } from "@/app/services/authService"; // Asegúrate de importar el servicio de autenticación
+import { useRouter } from "next/navigation";
 
 interface FormData {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -14,8 +16,41 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const router = useRouter(); 
+
+  const [{ data, loading, error }, executePost] = useAxios(
+    {
+      method: 'POST',
+      url: 'http://localhost:8000/api/v1/auth/token/login',
+    },
+    { manual: true } // Configuración para que la solicitud no se realice automáticamente
+  );
+  
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      // Realiza la solicitud POST al servidor utilizando Axios Hooks
+      const response = await executePost({
+        data, // Los datos del formulario
+      });
+
+      // El servidor ha respondido con éxito
+      console.log('Response:', response.data);
+      // Aquí puedes manejar la respuesta del servidor, redirigir, mostrar un mensaje, etc.
+
+      const { auth_token } = response.data;
+
+      // Guarda el token utilizando el servicio de autenticación
+      setAuthToken(auth_token);
+
+      // Realiza otras acciones después de guardar el token
+      router.push('/home/new-projects');
+
+    } catch (err) {
+      // Hubo un error en la solicitud POST
+      console.error('Error:', err);
+      // Puedes manejar el error, mostrar un mensaje de error, etc.
+    }
   };
 
   return (
@@ -25,23 +60,20 @@ const LoginForm = () => {
     >
       <label
         className="font-semibold font-principal text-2xl text-white"
-        htmlFor="email"
+        htmlFor="username"
       >
         E-mail
       </label>
       <input
         className="px-3 rounded-lg h-9"
         type="text"
-        id="email"
-        {...register("email", {
-          required: "* Email is required",
-          pattern: {
-            value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-            message: "* This is an invalid email",
-          },
+        id="username"
+        {...register("username", {
+          required: "* username is required",
+          
         })}
       />
-      {errors.email && <p>{errors.email.message}</p>}
+      {errors.username && <p>{errors.username.message}</p>}
       <label
         className="font-semibold font-principal text-2xl text-white"
         htmlFor="password"
@@ -60,11 +92,11 @@ const LoginForm = () => {
           },
           minLength: {
             value: 8,
-            message: "* The minimun lenght is 8 characters",
+            message: "* The minimum length is 8 characters",
           },
           maxLength: {
             value: 20,
-            message: "* The maximun lenght is 20 characters",
+            message: "* The maximum length is 20 characters",
           },
         })}
       />
@@ -73,9 +105,7 @@ const LoginForm = () => {
         <button className="bg-[#538086] hover:opacity-40 font-bold rounded-s w-[45%] font-principal h-12 self-center text-white">
           Login
         </button>
-        <p className="font-principal hover:underline cursor-pointer text-white">
-          <Link href="/auth/signup">Don't you have an account? Sign up</Link>
-        </p>
+        {/* Aquí puedes agregar un mensaje de error en caso de fallo de autenticación */}
       </div>
     </form>
   );

@@ -1,24 +1,40 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "@/app/services/apiInstance";
+import { getAuthToken } from "@/app/services/authService";
 
 const NewProjects = () => {
-  return (
-    <div className="w-32">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-      reiciendis provident cumque expedita aliquid accusantium numquam
-      perspiciatis, magnam id delectus impedit ut unde repudiandae illo sunt ad
-      molestias ipsam doloribus? Lorem ipsum, dolor sit amet consectetur
-      adipisicing elit. Eos atque, necessitatibus minima est incidunt totam
-      corporis at error ea voluptatibus. Dolorem blanditiis nemo corrupti
-      impedit alias illum laudantium nihil aspernatur. Lorem ipsum dolor sit
-      amet consectetur, adipisicing elit. Voluptatibus, temporibus modi aut
-      pariatur reiciendis sit expedita deleniti deserunt iusto! Id tenetur ipsum
-      exercitationem saepe molestias maxime ex. Sunt, aut distinctio? Lorem
-      ipsum dolor sit amet consectetur adipisicing elit. Alias soluta quia
-      distinctio ipsum harum. Nam cumque consequatur corrupti, ea quas adipisci
-      ipsum eligendi iusto, reprehenderit quaerat, itaque sequi nihil aut!
-    </div>
-  );
-};
+// Obtiene el token de autenticación
+  const [projectsData, setProjectsData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const authToken = getAuthToken(); 
+
+
+  
+  useEffect(() => {
+    // Realiza la solicitud GET utilizando la instancia de Axios
+    setLoading(true);
+    setError(null);
+
+    axiosInstance
+      .get("/projects")
+      .then((response) => {
+        setProjectsData(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  }, [authToken]);
+
+
+  console.log(projectsData);
+
+  return(
+    <>hola</>
+  )
+}
 
 export default NewProjects;

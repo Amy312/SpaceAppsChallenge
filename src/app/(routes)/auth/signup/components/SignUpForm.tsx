@@ -1,9 +1,10 @@
+import apiInstance from "@/app/services/apiInstance";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface FormData {
-  fullname: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -15,9 +16,30 @@ const SignUpForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Realiza la solicitud POST al servidor utilizando la instancia de Axios
+      const response = await apiInstance.post("/auth/users/", data);
+
+      // El servidor ha respondido con éxito
+      console.log('Response:', response.data);
+      // Aquí puedes manejar la respuesta del servidor, redirigir, mostrar un mensaje, etc.
+
+    } catch (err) {
+      // Hubo un error en la solicitud POST
+      console.error('Error:', err);
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <form
@@ -26,15 +48,15 @@ const SignUpForm = () => {
     >
       <label
         className="font-semibold font-principal text-2xl text-[#47576E]"
-        htmlFor="fullname"
+        htmlFor="username"
       >
         Full-Name
       </label>
       <input
         className="px-3 rounded-lg h-9 border border-[#47576E]"
         type="text"
-        id="fullname"
-        {...register("fullname", {
+        id="username"
+        {...register("username", {
           required: "* Full Name is required",
           minLength: { value: 3, message: "* The min lenght of a name is 3" },
           maxLength: { value: 30, message: "* The max lenght of a name is 30" },
