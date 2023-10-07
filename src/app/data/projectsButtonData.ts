@@ -2,7 +2,7 @@ import { GeneralButton } from "../model/generalButtonModel";
 
 export const NEW_PROJECTS_BUTTON_STYLE:GeneralButton = 
   {
-    text:"See applicants",
+    text:"Apply in the project",
     action:()=>{},
     type:"button",
     padding:"py-1 px-4",

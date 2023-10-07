@@ -8,9 +8,10 @@ interface Props {
 }
 
 const SkillsList = ({ listSkills }: Props) => {
+  //onsole.log(listSkills, listSkills.length);
   return (
-    <section className="m-1 p-1 w-[400px] flex flex-row flex-wrap font-light">
-      {listSkills.map((item: SkillProject) => (
+    <section className="m-1 p-1 w-[600px] flex flex-row overflow-x-auto font-light">
+      {listSkills.map((item) => (
         <Skill key={item.text} skill={item} />
       ))}
     </section>
