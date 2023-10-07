@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import useAxios from "axios-hooks";
 import { setAuthToken } from "@/app/services/authService"; // Asegúrate de importar el servicio de autenticación
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface FormData {
   username: string;
@@ -16,17 +17,24 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const router = useRouter(); 
+  const router = useRouter();
 
   const [{ data, loading, error }, executePost] = useAxios(
     {
-      method: 'POST',
-      url: 'http://localhost:8000/api/v1/auth/token/login',
+      method: "POST",
+      url: "http://localhost:8000/api/v1/auth/token/login",
     },
     { manual: true } // Configuración para que la solicitud no se realice automáticamente
   );
-  
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Loading...</p>;
+  }
+  
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       // Realiza la solicitud POST al servidor utilizando Axios Hooks
@@ -35,7 +43,7 @@ const LoginForm = () => {
       });
 
       // El servidor ha respondido con éxito
-      console.log('Response:', response.data);
+      console.log("Response:", response.data);
       // Aquí puedes manejar la respuesta del servidor, redirigir, mostrar un mensaje, etc.
 
       const { auth_token } = response.data;
@@ -44,11 +52,10 @@ const LoginForm = () => {
       setAuthToken(auth_token);
 
       // Realiza otras acciones después de guardar el token
-      router.push('/home/new-projects');
-
+      router.push("/home/new-projects");
     } catch (err) {
       // Hubo un error en la solicitud POST
-      console.error('Error:', err);
+      console.error("Error:", err);
       // Puedes manejar el error, mostrar un mensaje de error, etc.
     }
   };
@@ -62,7 +69,7 @@ const LoginForm = () => {
         className="font-semibold font-principal text-2xl text-white"
         htmlFor="username"
       >
-        E-mail
+        Username
       </label>
       <input
         className="px-3 rounded-lg h-9"
@@ -70,7 +77,6 @@ const LoginForm = () => {
         id="username"
         {...register("username", {
           required: "* username is required",
-          
         })}
       />
       {errors.username && <p>{errors.username.message}</p>}
@@ -105,7 +111,12 @@ const LoginForm = () => {
         <button className="bg-[#538086] hover:opacity-40 font-bold rounded-s w-[45%] font-principal h-12 self-center text-white">
           Login
         </button>
-        {/* Aquí puedes agregar un mensaje de error en caso de fallo de autenticación */}
+        <p className="font-principal hover:underline cursor-pointer text-white">
+          <Link href="/auth/signup">
+            {" "}
+            Don{"'"}t you have an account? Sign up
+          </Link>
+        </p>
       </div>
     </form>
   );
