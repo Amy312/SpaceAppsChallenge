@@ -9,7 +9,6 @@ import { ProjectDB } from "@/app/model/projectDBModel";
 import { SkillProject } from "@/app/model/skillProjectModel";
 import useAxios from "axios-hooks";
 import React, { useEffect, useState } from "react";
-import TitleProjectCard from "../../../components/TitleCard";
 import DescriptionCard from "../../../components/DescriptionCard";
 import axiosInstance from "@/app/services/apiInstance";
 import { getAuthToken } from "@/app/services/authService";
@@ -86,7 +85,7 @@ const NewProjects = () => {
           {projectsData.map((item, index) => (
             <Card key={index}>
               <>
-                <TitleProjectCard titleText={item.title} />
+                <TitleCard titleText={item.title} />
                 <DescriptionCard descriptionText={item.description} />
                 <ProjectCardFooter
                   id={index + 1}

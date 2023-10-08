@@ -34,7 +34,7 @@ const LoginForm = () => {
   }
 
   if (error) {
-    return <p>Loading...</p>;
+    return <p>Error!</p>;
   }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
