@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/home/new-projects");
+    router.push("/auth/login");
   }, []);
   return <></>;
 }

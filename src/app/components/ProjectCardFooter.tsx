@@ -6,15 +6,18 @@ import { GeneralButton } from "../model/generalButtonModel";
 import { SkillProject } from "../model/skillProjectModel";
 import { useRouter } from "next/navigation";
 import { StoreContext } from "../store/StoreProvider";
+import { ProjectFR } from "../model/projectFRModel";
 
 interface Props {
   id: number;
+  project: ProjectFR;
   buttonData: GeneralButton;
-  listSkills: SkillProject[];
 }
 
-const ProjectCardFooter = ({ id, project, buttonData, listSkills }: Props) => {
+const ProjectCardFooter = ({ id, project, buttonData }: Props) => {
   const context: any = useContext(StoreContext);
+
+  const { skill } = project;
 
   const router = useRouter();
 
@@ -38,7 +41,7 @@ const ProjectCardFooter = ({ id, project, buttonData, listSkills }: Props) => {
 
   return (
     <div className="flex flex-row justify-between items-center mb-3 m-1">
-      <SkillsList listSkills={listSkills} />
+      <SkillsList listSkills={skill} />
       <div className="mr-5">
         <GeneralActionButton buttonData={buttonData} />
       </div>

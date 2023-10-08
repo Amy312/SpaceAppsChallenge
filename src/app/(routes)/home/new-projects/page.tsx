@@ -1,125 +1,72 @@
 "use client";
 import Card from "@/app/components/Card";
 import ProjectCardFooter from "@/app/components/ProjectCardFooter";
+import SkillsList from "@/app/components/SkillsList";
+import TitleCard from "@/app/components/TitleCard";
 import TitlePage from "@/app/components/TitlePage";
 import { NEW_PROJECTS_BUTTON_STYLE } from "@/app/data/projectsButtonData";
 import { ProjectDB } from "@/app/model/projectDBModel";
 import { SkillProject } from "@/app/model/skillProjectModel";
-import { DB_INSTANCE } from "@/app/services/dbInstance";
 import useAxios from "axios-hooks";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TitleProjectCard from "../../../components/TitleCard";
 import DescriptionCard from "../../../components/DescriptionCard";
+import axiosInstance from "@/app/services/apiInstance";
+import { getAuthToken } from "@/app/services/authService";
+import { ProjectFR } from "@/app/model/projectFRModel";
+import { getProjectsFromDB } from "@/app/services/projectsService";
+import ModalPage from "@/app/modals/ModalPage";
+import ModalLoading from "@/app/modals/ModalLoading";
+import { error } from "console";
+import ModalMessage from "@/app/modals/ModalMessage";
 
 const NewProjects = () => {
-  // const [{ data, loading, error }] = useAxios(`${DB_INSTANCE}/api/v1/projects`);
+  const [projectData, setProjectData] = useState<ProjectFR[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [findedError, setFindedError] = useState<boolean>(false);
 
-  // const getProjectsDataDB = async () => {
-  //   console.log("GETTING DATA");
-  //   const projectList: ProjectDB[] = await data;
-  //   console.log("DATA GOTTEN");
-  //   console.log(projectList);
-  // };
-
-  // useEffect(() => {
-  //   getProjectsDataDB();
-  // }, []);
-
-  // if (loading) {
-  //   return <p>loading</p>;
-  // }
-  // if (error) {
-  //   return <p>error</p>;
-  // }
-
-  const PROVISIONAL_LIST: SkillProject[] = [
-    {
-      text: "react js",
-    },
-    {
-      text: "angular js",
-    },
-    {
-      text: "next js",
-    },
-    {
-      text: "vue js",
-    },
-    {
-      text: "nuxt js",
-    },
-    {
-      text: "svelte js",
-    },
-    {
-      text: "react js",
-    },
-    {
-      text: "angular js",
-    },
-    {
-      text: "next js",
-    },
-    {
-      text: "vue js",
-    },
-    {
-      text: "nuxt js",
-    },
-    {
-      text: "svelte js",
-    },
-  ];
-
-  const PROVE_DATA = [
-    {
-      titleText: "Title of a Project ONE",
-      descriptionText:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam praesentium eligendi tenetur quidem nobis reprehenderit culpa repellendus eaque architecto, saepe eius iste explicabo. Aliquam fugiat, neque minima magni repellendus harum!",
-      listSkills: PROVISIONAL_LIST,
-    },
-    {
-      titleText: "Title of a Project TWO",
-      descriptionText:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam praesentium eligendi tenetur quidem nobis reprehenderit culpa repellendus eaque architecto, saepe eius iste explicabo. Aliquam fugiat, neque minima magni repellendus harum!",
-      listSkills: PROVISIONAL_LIST,
-    },
-    {
-      titleText: "Title of a Project THREE",
-      descriptionText:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam praesentium eligendi tenetur quidem nobis reprehenderit culpa repellendus eaque architecto, saepe eius iste explicabo. Aliquam fugiat, neque minima magni repellendus harum!",
-      listSkills: PROVISIONAL_LIST,
-    },
-    {
-      titleText: "Title of a Project FOUR",
-      descriptionText:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam praesentium eligendi tenetur quidem nobis reprehenderit culpa repellendus eaque architecto, saepe eius iste explicabo. Aliquam fugiat, neque minima magni repellendus harum!",
-      listSkills: PROVISIONAL_LIST,
-    },
-  ];
+  const getProjectsDataFromDB = async () => {
+    const data: ProjectFR[] = await getProjectsFromDB();
+    setProjectData(data);
+  };
 
   return (
-    <section className="w-full flex flex-col justify-center items-center">
-      <div className="w-[900px] my-10 flex justify-start">
-        <TitlePage text={"New Projects"} />
-      </div>
-      <section className="w-full h-full flex flex-col justify-center items-center">
-        {PROVE_DATA.map((item, index) => (
-          <Card key={index}>
-            <>
-              <TitleProjectCard titleText={item.titleText} />
-              <DescriptionCard descriptionText={item.descriptionText} />
-              <ProjectCardFooter
-                id={index + 1}
-                project={item}
-                buttonData={NEW_PROJECTS_BUTTON_STYLE}
-                listSkills={item.listSkills}
+    <>
+      {loading && findedError && (
+        <ModalPage>
+          <>
+            {loading && <ModalLoading />}
+            {findedError && (
+              <ModalMessage
+                action={() => setFindedError(false)}
+                title={"ERROR 404"}
+                message={"Error encontrado! vuevle mas tarde"}
               />
-            </>
-          </Card>
-        ))}
+            )}
+          </>
+        </ModalPage>
+      )}
+      <section className="w-full flex flex-col justify-center items-center">
+        <div className="w-[900px] my-10 flex justify-start">
+          <TitlePage text={"New Projects"} />
+        </div>
+        <section className="w-full h-full flex flex-col justify-center items-center">
+          {projectData.map((item, index) => (
+            <Card key={index}>
+              <>
+                <TitleProjectCard titleText={item.title} />
+                <DescriptionCard descriptionText={item.description} />
+                <ProjectCardFooter
+                  id={index + 1}
+                  project={item}
+                  buttonData={NEW_PROJECTS_BUTTON_STYLE}
+                />
+              </>
+            </Card>
+          ))}
+        </section>
       </section>
-    </section>
+    </>
   );
 };
 
