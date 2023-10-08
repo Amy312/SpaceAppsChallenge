@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useAxios from "axios-hooks";
 import { setAuthToken } from "@/app/services/authService"; // Asegúrate de importar el servicio de autenticación
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { StoreContext } from "@/app/store/StoreProvider";
 
 interface FormData {
   username: string;
@@ -17,6 +18,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
+  const context: any = useContext(StoreContext);
   const router = useRouter();
 
   const [{ data, loading, error }, executePost] = useAxios(
@@ -34,7 +36,7 @@ const LoginForm = () => {
   if (error) {
     return <p>Loading...</p>;
   }
-  
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       // Realiza la solicitud POST al servidor utilizando Axios Hooks
@@ -51,6 +53,7 @@ const LoginForm = () => {
       // Guarda el token utilizando el servicio de autenticación
       setAuthToken(auth_token);
 
+      context.setAuth(true);
       // Realiza otras acciones después de guardar el token
       router.push("/home/new-projects");
     } catch (err) {

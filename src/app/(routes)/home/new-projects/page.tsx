@@ -21,18 +21,50 @@ import { error } from "console";
 import ModalMessage from "@/app/modals/ModalMessage";
 
 const NewProjects = () => {
-  const [projectData, setProjectData] = useState<ProjectFR[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const authToken = getAuthToken();
+  const [projectsData, setProjectsData] = useState<ProjectFR[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [findedError, setFindedError] = useState<boolean>(false);
 
   const getProjectsDataFromDB = async () => {
-    const data: ProjectFR[] = await getProjectsFromDB();
-    setProjectData(data);
+    try {
+      const data: ProjectFR[] = await getProjectsFromDB();
+      setProjectsData(data);
+    } catch (error) {
+      console.log("ERROR ENCONTRADO");
+      console.error(error);
+    }
   };
+
+  useEffect(() => {
+    getProjectsDataFromDB();
+  }, [authToken]);
+  // const [projectsData, setProjectsData] = useState<ProjectFR[]>([]);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const authToken = getAuthToken();
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setError(null);
+
+  //   axiosInstance
+  //     .get("/projects")
+  //     .then((response) => {
+  //       setProjectsData(response.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setError(err);
+  //       setLoading(false);
+  //     });
+  // }, [authToken]);
+
+  // console.log(projectsData);
 
   return (
     <>
-      {loading && findedError && (
+      {/* {loading && findedError && (
         <ModalPage>
           <>
             {loading && <ModalLoading />}
@@ -45,13 +77,13 @@ const NewProjects = () => {
             )}
           </>
         </ModalPage>
-      )}
+      )} */}
       <section className="w-full flex flex-col justify-center items-center">
         <div className="w-[900px] my-10 flex justify-start">
           <TitlePage text={"New Projects"} />
         </div>
         <section className="w-full h-full flex flex-col justify-center items-center">
-          {projectData.map((item, index) => (
+          {projectsData.map((item, index) => (
             <Card key={index}>
               <>
                 <TitleProjectCard titleText={item.title} />
