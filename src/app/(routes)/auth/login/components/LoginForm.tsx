@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useAxios from "axios-hooks";
 import { setAuthToken } from "@/app/services/authService"; // Asegúrate de importar el servicio de autenticación
@@ -24,10 +24,24 @@ const LoginForm = () => {
   const [{ data, loading, error }, executePost] = useAxios(
     {
       method: "POST",
-      url: "http://localhost:8000/api/v1/auth/token/login",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_API}/auth/token/login`,
     },
     { manual: true } // Configuración para que la solicitud no se realice automáticamente
   );
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      if (localStorage.getItem("auth-login")) {
+        setAuthToken("");
+        localStorage.setItem("auth-login", "");
+      }
+
+      if (localStorage.getItem("auth")) {
+        context.setAuth(false);
+        localStorage.setItem("auth", "false");
+      }
+    }
+  }, []);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -45,14 +59,17 @@ const LoginForm = () => {
       });
 
       // El servidor ha respondido con éxito
-      console.log("Response:", response.data);
+      console.log("Response:", data);
       // Aquí puedes manejar la respuesta del servidor, redirigir, mostrar un mensaje, etc.
 
       const { auth_token } = response.data;
 
       // Guarda el token utilizando el servicio de autenticación
       setAuthToken(auth_token);
-
+      if (typeof window !== undefined) {
+        localStorage.setItem("auth-login", JSON.stringify(auth_token));
+        localStorage.setItem("auth", "true");
+      }
       context.setAuth(true);
       // Realiza otras acciones después de guardar el token
       router.push("/home/new-projects");

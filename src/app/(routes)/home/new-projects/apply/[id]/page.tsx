@@ -5,6 +5,9 @@ import { StoreContext } from "@/app/store/StoreProvider";
 import TitleProjectCard from "../../../../../components/TitleCard";
 import DescriptionCard from "../../../../../components/DescriptionCard";
 import React, { useContext } from "react";
+import ApplyFooter from "../components/ApplyFooter";
+import ProposalCard from "../components/ProposalCard";
+import TitleCard from "../../../../../components/TitleCard";
 
 const Apply = () => {
   const context: any = useContext(StoreContext);
@@ -16,8 +19,7 @@ const Apply = () => {
   // duration: new Date(),
   // linkedinCreator: "",
 
-  const { id, title, description, skill, duration, linkedinCreator } =
-    context.applyData;
+  const { title, description } = context.applyData;
 
   return (
     <section className="w-full flex flex-col justify-center items-center">
@@ -27,14 +29,16 @@ const Apply = () => {
       <section className="w-full h-full flex flex-col justify-center items-center">
         <Card>
           <>
-            <div className="my-10">
-              <TitleProjectCard titleText={title} />
+            <div className="mb-3 ml-5 p-5 pb-0">
+              <TitleCard titleText={title} />
             </div>
             <div className="mx-10">
               <DescriptionCard descriptionText={description} />
             </div>
+            <ApplyFooter applyData={context.applyData} />
           </>
         </Card>
+        <ProposalCard />
       </section>
     </section>
   );

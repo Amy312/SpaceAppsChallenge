@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import LoginForm from "./components/LoginForm";
 
 const LoginPage = () => {
@@ -18,7 +18,7 @@ const LoginPage = () => {
           </p>
         </div>
         <div className="flex flex-1 justify-center items-center">
-            <LoginForm />
+          <LoginForm />
         </div>
       </div>
     </>

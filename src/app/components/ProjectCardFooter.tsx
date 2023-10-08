@@ -3,29 +3,21 @@ import React, { useContext, useEffect } from "react";
 import SkillsList from "./SkillsList";
 import GeneralActionButton from "./GeneralActionButton";
 import { GeneralButton } from "../model/generalButtonModel";
-import { SkillProject } from "../model/skillProjectModel";
-import { useRouter } from "next/navigation";
 import { StoreContext } from "../store/StoreProvider";
 import { ProjectFR } from "../model/projectFRModel";
 
 interface Props {
-  id: number;
   project: ProjectFR;
   buttonData: GeneralButton;
+  action: () => void;
 }
 
-const ProjectCardFooter = ({ id, project, buttonData }: Props) => {
+const ProjectCardFooter = ({ project, buttonData, action }: Props) => {
   const context: any = useContext(StoreContext);
 
   const { skill } = project;
 
-  const router = useRouter();
-
-  const actionButton = () => {
-    context.setApplyData(project);
-    router.push(`/home/new-projects/apply/${id}`);
-  };
-  buttonData.action = actionButton;
+  buttonData.action = action;
 
   useEffect(() => {
     context.setApplyData({
