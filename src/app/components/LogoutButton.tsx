@@ -1,9 +1,17 @@
 "use client";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext } from "react";
+import { StoreContext } from "../store/StoreProvider";
+import axiosInstance from "../services/apiInstance";
 
 const LogoutButton = () => {
+  const context: any = useContext(StoreContext);
+  const router = useRouter();
+
   const logOut = () => {
-    console.log("log out");
+    context.setAuth(false);
+    axiosInstance.post('/auth/token/logout');
+    router.push("/auth/login");
   };
 
   return (

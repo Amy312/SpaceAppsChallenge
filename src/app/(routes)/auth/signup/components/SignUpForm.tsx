@@ -1,3 +1,5 @@
+import ModalError from "@/app/modals/ModalError";
+import ModalLoading from "@/app/modals/ModalLoading";
 import apiInstance from "@/app/services/apiInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,14 +32,8 @@ const SignUpForm = () => {
 
       // Realiza la solicitud POST al servidor utilizando la instancia de Axios
       const response = await apiInstance.post("/auth/users/", data);
-      console.log("UNO222");
-
-      // El servidor ha respondido con éxito
-      console.log("Response:", response.data);
-      // Aquí puedes manejar la respuesta del servidor, redirigir, mostrar un mensaje, etc.
-      console.log("UNO2345");
       router.back();
-    } catch (err) {
+    } catch (err:any) {
       // Hubo un error en la solicitud POST
       console.error("Error:", err);
       setError(err.message || "An error occurred");
@@ -47,11 +43,11 @@ const SignUpForm = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <ModalLoading/>;
   }
 
   if (error) {
-    return <p>Error!</p>;
+    return <ModalError/>;
   }
 
   return (
@@ -66,7 +62,7 @@ const SignUpForm = () => {
         Username
       </label>
       <input
-        className="px-3 rounded-lg h-9 border border-[#47576E]"
+        className="px-3 rounded-lg h-9 border border-[#47576E] outline-none"
         type="text"
         id="username"
         {...register("username", {
@@ -87,7 +83,7 @@ const SignUpForm = () => {
         E-mail
       </label>
       <input
-        className="px-3 rounded-lg h-9 border border-[#47576E]"
+        className="px-3 rounded-lg h-9 border border-[#47576E] outline-none"
         type="text"
         id="email"
         {...register("email", {
@@ -106,7 +102,7 @@ const SignUpForm = () => {
         Password
       </label>
       <input
-        className="px-3 rounded-lg h-9 border border-[#47576E]"
+        className="px-3 rounded-lg h-9 border border-[#47576E] outline-none"
         type="password"
         id="password"
         {...register("password", {
@@ -127,7 +123,7 @@ const SignUpForm = () => {
       />
       {errors.password && <p>{errors.password.message}</p>}
       <div className="flex flex-col self-center space-y-2">
-        <button className="bg-[#538086] hover:opacity-40 font-bold rounded-s w-[45%] font-principal h-12 self-center text-white">
+        <button className="bg-[#538086] hover:opacity-40 font-bold rounded-lg w-[45%] font-principal h-12 self-center text-white">
           Register
         </button>
         <p className="font-principal hover:underline cursor-pointer text-[#47576E]">

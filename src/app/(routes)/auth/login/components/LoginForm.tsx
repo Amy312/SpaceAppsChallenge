@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useAxios from "axios-hooks";
 import { setAuthToken } from "@/app/services/authService"; // Asegúrate de importar el servicio de autenticación
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { StoreContext } from "@/app/store/StoreProvider";
+import ModalLoading from "@/app/modals/ModalLoading";
+import ModalError from "@/app/modals/ModalError";
 
 interface FormData {
   username: string;
@@ -17,24 +20,25 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<FormData>();
 
+  const context: any = useContext(StoreContext);
   const router = useRouter();
 
   const [{ data, loading, error }, executePost] = useAxios(
     {
       method: "POST",
-      url: "http://localhost:8000/api/v1/auth/token/login",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_API}/auth/token/login`,
     },
     { manual: true } // Configuración para que la solicitud no se realice automáticamente
   );
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <ModalLoading/>;
   }
 
   if (error) {
-    return <p>Loading...</p>;
+    return <ModalError/>;
   }
-  
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       // Realiza la solicitud POST al servidor utilizando Axios Hooks
@@ -51,6 +55,7 @@ const LoginForm = () => {
       // Guarda el token utilizando el servicio de autenticación
       setAuthToken(auth_token);
 
+      context.setAuth(true);
       // Realiza otras acciones después de guardar el token
       router.push("/home/new-projects");
     } catch (err) {
@@ -72,7 +77,7 @@ const LoginForm = () => {
         Username
       </label>
       <input
-        className="px-3 rounded-lg h-9"
+        className="px-3 rounded-lg h-9 outline-none"
         type="text"
         id="username"
         {...register("username", {
@@ -87,7 +92,7 @@ const LoginForm = () => {
         Password
       </label>
       <input
-        className="px-3 rounded-lg h-9"
+        className="px-3 rounded-lg h-9 outline-none"
         type="password"
         id="password"
         {...register("password", {
@@ -108,7 +113,7 @@ const LoginForm = () => {
       />
       {errors.password && <p>{errors.password.message}</p>}
       <div className="flex flex-col self-center space-y-2">
-        <button className="bg-[#538086] hover:opacity-40 font-bold rounded-s w-[45%] font-principal h-12 self-center text-white">
+        <button className="bg-[#538086] hover:opacity-40 font-bold rounded-lg w-[45%] font-principal h-12 self-center text-white">
           Login
         </button>
         <p className="font-principal hover:underline cursor-pointer text-white">

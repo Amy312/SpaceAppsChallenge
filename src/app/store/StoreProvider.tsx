@@ -1,5 +1,7 @@
 "use client";
+import moment from "moment";
 import React, { createContext, useState } from "react";
+import { ProjectFR } from "../model/projectFRModel";
 
 export const StoreContext = createContext({});
 
@@ -12,6 +14,15 @@ const StoreProvider = ({ children }: Props) => {
 
   const [titleHeaderPage, setTitleHeaderPage] = useState<string>("EcuiP+");
 
+  const [applyData, setApplyData] = useState<ProjectFR>({
+    id: 0,
+    title: "",
+    description: "",
+    skill: [],
+    duration: new Date(),
+    linkedinCreator: "",
+  });
+
   return (
     <StoreContext.Provider
       value={{
@@ -19,6 +30,8 @@ const StoreProvider = ({ children }: Props) => {
         setAuth,
         titleHeaderPage,
         setTitleHeaderPage,
+        applyData,
+        setApplyData,
       }}
     >
       {children}
